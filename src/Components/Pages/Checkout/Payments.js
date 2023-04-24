@@ -6,9 +6,11 @@ import { useState } from 'react';
 import { updateCheckout } from '../../../Store/Reducers/CheckoutReducer';
 import { Link, useNavigate } from 'react-router-dom';
 import CardPayments from './CardPayments';
+import { getCartTotal } from '../../../Helpers/commonUtils';
 
 function Payments() {
   const checkoutData = useSelector((state) => state.checkout.value);
+  const orderProducts = checkoutData?.orders;
   const paymentMode = checkoutData?.payment?.payment_mode;
   const [codOtp] = useState(Math.floor(1000 + Math.random() * 9000));
   const [confirmOtp, setConfirmOtp] = useState('');
@@ -35,7 +37,7 @@ function Payments() {
         <section className="checkout-page-section py-5">
           <Container>
             <Row>
-              <Col className="text-center mb-3">
+              <Col className="text-center mb-5">
                 <h4>
                   <span className="text-muted">
                     {constants.COMPLETE_PAYMENT_HEADING_TITLE}
@@ -45,7 +47,42 @@ function Payments() {
             </Row>
 
             <Row className="justify-content-md-center">
+              <Col md={paymentMode === 'cod' ? 4 : 6} className="mb-3">
+                <h4 className="mb-3">{constants.PRODUCT_SUMMARY_LABEL}</h4>
+
+                <ul className="list-group mb-3">
+                  {Array.isArray(orderProducts) && orderProducts.length > 0
+                    ? orderProducts.map((prodcusts, index) => {
+                        return (
+                          <li
+                            className="list-group-item d-flex justify-content-between lh-condensed"
+                            key={index}
+                          >
+                            <div className="text-start">
+                              <h6 className="my-0">{prodcusts?.name}</h6>
+                              <small className="text-muted">
+                                {prodcusts?.brief_desc}
+                              </small>
+                            </div>
+                            <span className="text-muted">
+                              ${prodcusts?.price}
+                            </span>
+                          </li>
+                        );
+                      })
+                    : constants.CART_NO_PRODUCTS_TITLE}
+
+                  <li className="list-group-item d-flex justify-content-between">
+                    <span>{constants.CART_TOTAL_TITLE}</span>
+                    <strong>${getCartTotal(orderProducts)}</strong>
+                  </li>
+                </ul>
+              </Col>
+            </Row>
+
+            <Row className="justify-content-md-center">
               <Col md={paymentMode === 'cod' ? 4 : 6}>
+                <h4 className="mb-3">{constants.CONFIRM_PAYMENT_LABEL}</h4>
                 {userErrorMessage && (
                   <div className="mb-3">
                     <Alert
@@ -100,7 +137,9 @@ function Payments() {
                   ) : (
                     <Alert variant="danger">
                       {constants.COMPLETE_PAYMENT_NOT_AVIAL_CONTENT}
-                      <Link className="btn btn-primary mx-2" to='/'>{constants.BACK_TO_HOME_BUTTON_TITLE}</Link>
+                      <Link className="btn btn-primary mx-2" to="/">
+                        {constants.BACK_TO_HOME_BUTTON_TITLE}
+                      </Link>
                     </Alert>
                   )}
                 </div>
