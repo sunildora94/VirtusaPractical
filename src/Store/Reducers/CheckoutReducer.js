@@ -21,13 +21,12 @@ const initialState = {
     },
     payment: {
       payment_mode: '',
+      payment_status: '',
       payment_total: '',
       transaction_id: '',
+      payment_issuer: ''
     },
-    orders: {
-      products: [],
-      order_total: '',
-    },
+    orders: []
   },
 };
 

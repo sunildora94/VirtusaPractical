@@ -29,7 +29,12 @@ const constants = {
   SHIPPING_AS_BILLING_CONTENT:
     'Shipping address is the same as my billing address',
   CANT_LONGER_ERROR_MESSAGE: "This value can't be longer than 32 characters.",
+  CANT_LONGER_16_ERROR_MESSAGE: "This value can't be longer than 16 digits.",
+  CANT_LESS_16_ERROR_MESSAGE: "This value can't be longer than 16 digits.",
   ONLY_ALPHABETS_ERROR_MESSAGE: 'Please enter alphabets only.',
+  ONLY_DIGITS_ERROR_MESSAGE: 'Please enter digits(0-9) only.',
+  VALID_EXPIRATION_DATE_ERROR_MESSAGE:
+    'Not a valid expiration date. Example: MM/YY',
   REQUIRED_ERROR_MESSAGE: 'This field is required.',
   INVALIAD_EMAIL_ERROR_MESSAGE: 'Invalid email address.',
   THANK_YOU_PAGE_TITLE: 'Thank You !',
@@ -38,6 +43,27 @@ const constants = {
   PRODUCT_NAME_TITLE: 'Product Name',
   PRODUCT_DESCRIPTION_TITLE: 'Brief Description',
   PRODUCT_PRICE_TITLE: 'Price',
-  RELOAD_PRODUCTS_BUTTON_TITLE: 'reload default data'
+  RELOAD_PRODUCTS_BUTTON_TITLE: 'reload default data',
+  COMPLETE_PAYMENT_HEADING_TITLE: 'Complete Payment',
+  COMPLETE_PAYMENT_ENTER_CODE_LABEL: 'Enter code',
+  COMPLETE_PAYMENT_ENTER_CODE_NOTE_CONTENT:
+    'Please enter below code to confirm your order.',
+  COMPLETE_PAYMENT_CONFIRM_ORDER_LABEL: 'Confirm order',
+  COMPLETE_PAYMENT_CARD_NAME_LABEL: 'Name on card',
+  COMPLETE_PAYMENT_CARD_NAME_NOTE_CONTENT: 'Full name as displayed on card.',
+  COMPLETE_PAYMENT_CARD_NO_LABEL: 'Credit card number',
+  COMPLETE_PAYMENT_CARD_NO_NOTE_CONTENT: 'E.g.: 49..., 51..., 36..., 37...',
+  COMPLETE_PAYMENT_CARD_EXPIRE_LABEL: 'Expiration',
+  COMPLETE_PAYMENT_CARD_CVV_LABEL: 'CVV',
+  COMPLETE_PAYMENT_SUBMIT_BUTTON_LABEL: 'Pay',
+  COMPLETE_PAYMENT_NOT_AVIAL_CONTENT:
+    'Unale to make payments please go back and try again.',
+  ORDER_DETAILS_LABEL: 'Product Details',
+  PAYMENT_DETAILS_LABEL: 'Payment Details',
+  PAYMENT_DETAILS_TRANSACTION_LABEL: 'Transaction ID',
+  PAYMENT_DETAILS_TOTAL_LABEL: 'Payment Total',
+  PAYMENT_DETAILS_MODE_LABEL: 'Payment Mode',
+  PAYMENT_DETAILS_STATUS_LABEL: 'Payment Status',
+  PAYMENT_DETAILS_ISSUER_LABEL: 'Payment Issuer',
 };
 export default constants;

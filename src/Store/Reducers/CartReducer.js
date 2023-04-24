@@ -35,7 +35,6 @@ export const CartReducer = createSlice({
       state.products = [];
     },
     loadDefaultProducts: (state, action) => {
-      console.log('defaultProducts', defaultProducts)
       state.products = defaultProducts;
     }
   },

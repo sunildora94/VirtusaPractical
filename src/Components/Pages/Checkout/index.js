@@ -1,4 +1,5 @@
 import Checkout from './Checkout';
+import Payments from './Payments';
 
 const CheckoutPage = () => {
   return (
@@ -8,4 +9,4 @@ const CheckoutPage = () => {
   );
 };
 
-export { CheckoutPage };
+export { CheckoutPage, Payments };

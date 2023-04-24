@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getCartTotal } from '../../../Helpers/commonUtils';
 
-
 const validationSchema = Yup.object().shape({
   billing: Yup.object().shape({
     first_name: Yup.string()
@@ -40,6 +39,10 @@ function BillingDetails() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [userErroMessage, setUserErroMessage] = useState('');
+  const paymentTypes = [
+    { label: 'Cash on delivery', value: 'cod' },
+    { label: 'Debit / Credit Cards', value: 'card' },
+  ];
 
   // All countries list data
   useEffect(() => {
@@ -105,6 +108,7 @@ function BillingDetails() {
           },
           payment: {
             payment_mode: 'cod',
+            payment_status: 'pending',
             payment_total: '',
             transaction_id: '',
           },
@@ -114,9 +118,9 @@ function BillingDetails() {
           setSubmitting(true);
           if (Array.isArray(cartProducts) && cartProducts.length > 0) {
             values.payment.payment_total = getCartTotal(cartProducts);
-            values.payment.transaction_id = Math.random();
+            values.orders = cartProducts; 
             dispatch(updateCheckout(values));
-            navigate('/thankyou');
+            navigate('/payment');
           } else {
             setUserErroMessage(
               'There are no products in the card, please add some to proccess the checkout.'
@@ -480,22 +484,28 @@ function BillingDetails() {
             <h4 className="mb-3">{constants.PAYMENT_HEADING_LABEL}</h4>
 
             <div className="d-block my-3">
-              <div className="custom-control custom-radio">
-                <input
-                  id="credit"
-                  name="payment.payment_mode"
-                  type="radio"
-                  className="custom-control-input"
-                  checked={values.payment.payment_mode === 'cod' ? true : false}
-                  onChange={handleChange}
-                />
-                <label className="custom-control-label" htmlFor="credit">
-                  {constants.CASH_ON_DELIVERY_LABEL}
-                </label>
-              </div>
-              <Form.Text className="text-muted">
-                {constants.ACCEPTS_COD_ONLY}
-              </Form.Text>
+              {paymentTypes.map((type) => {
+                return (
+                  <div className="custom-control custom-radio" key={type.value}>
+                    <input
+                      id={type.value}
+                      name="payment.payment_mode"
+                      type="radio"
+                      className="custom-control-input"
+                      value={type.value}
+                      checked={
+                        values.payment.payment_mode === type.value
+                          ? true
+                          : false
+                      }
+                      onChange={handleChange}
+                    />
+                    <label className="custom-control-label" htmlFor={type.value}>
+                      {type.label}
+                    </label>
+                  </div>
+                );
+              })}
             </div>
 
             {userErroMessage && (
@@ -513,7 +523,7 @@ function BillingDetails() {
             <button
               className="btn btn-primary btn-lg btn-block w-100"
               type="submit"
-              // disabled={!(dirty && isValid)}
+              disabled={!(dirty && isValid)}
             >
               {constants.CHECKOUT_BUTTON_LABEL}
             </button>
