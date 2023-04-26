@@ -4,6 +4,7 @@ import { Footer, Header } from '../../../TemplateParts';
 import { Alert, Badge, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import { useState } from 'react';
 import { updateCheckout } from '../../../Store/Reducers/CheckoutReducer';
+import { clearCart } from '../../../Store/Reducers/CartReducer';
 import { Link, useNavigate } from 'react-router-dom';
 import CardPayments from './CardPayments';
 import { getCartTotal } from '../../../Helpers/commonUtils';
@@ -26,6 +27,7 @@ function Payments() {
         payment: { ...newcheckoutData.payment, payment_status: 'completed' },
       };
       dispatch(updateCheckout(newcheckoutData));
+      dispatch(clearCart());
       navigate('/thankyou');
     } else setUserErrorMessage('Please enter the code.');
   };
@@ -66,6 +68,8 @@ function Payments() {
                             </div>
                             <span className="text-muted">
                               ${prodcusts?.price}
+                              <br />
+                              <small>{constants.QUANTITY_LABEL}: {prodcusts?.quantity}</small>
                             </span>
                           </li>
                         );

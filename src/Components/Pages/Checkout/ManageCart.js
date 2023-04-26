@@ -51,6 +51,7 @@ const ManageCart = () => {
                       <th>{constants.PRODUCT_NAME_TITLE}</th>
                       <th>{constants.PRODUCT_DESCRIPTION_TITLE}</th>
                       <th>{constants.PRODUCT_PRICE_TITLE}</th>
+                      <th>{constants.PRODUCT_QUANTITY_TITLE}</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -62,6 +63,7 @@ const ManageCart = () => {
                             <td>{rowData.name}</td>
                             <td>{rowData.brief_desc}</td>
                             <td>${rowData.price}</td>
+                            <td>{rowData.quantity}</td>
                             <td>
                               <MdDelete
                                 className="delete-product-icon"
@@ -78,11 +80,6 @@ const ManageCart = () => {
                       <tr>
                         <td colSpan="4">
                           {constants.CART_NO_PRODUCTS_TITLE}
-                          <Button
-                            onClick={() => handleLoadDefaultCartProducts()}
-                          >
-                            {constants.RELOAD_PRODUCTS_BUTTON_TITLE}
-                          </Button>
                         </td>
                       </tr>
                     )}
@@ -90,7 +87,7 @@ const ManageCart = () => {
                       <td colSpan="2">
                         <strong>{constants.CART_TOTAL_TITLE}</strong>
                       </td>
-                      <td colSpan="2">
+                      <td colSpan="3">
                         <strong>${getCartTotal(cartProducts)}</strong>
                       </td>
                     </tr>

@@ -8,6 +8,7 @@ import { updateCheckout } from '../../../Store/Reducers/CheckoutReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getCartTotal } from '../../../Helpers/commonUtils';
+import useForm from '../../CustomHooks/useForm';
 
 const validationSchema = Yup.object().shape({
   billing: Yup.object().shape({
@@ -43,6 +44,50 @@ function BillingDetails() {
     { label: 'Cash on delivery', value: 'cod' },
     { label: 'Debit / Credit Cards', value: 'card' },
   ];
+
+  //Final submit function
+  const formSubmitHandler = () => {
+    console.log('Callback function when form is submitted!');
+    console.log('Form Values ', values);
+    let formData = {
+      billing: {
+        first_name: values?.billing_first_name,
+        last_name: values?.billing_last_name,
+        user_email: values?.billing_user_email,
+        address_1: values?.billing_address_1,
+        address_2: values?.billing_address_2,
+        country: values?.billing_country,
+        state: values?.billing_state,
+        city: values?.billing_city,
+      },
+      shipping: {
+        address_1: values?.shipping_address_1,
+        address_2: values?.shipping_address_2,
+        country: values?.shipping_country,
+        state: values?.shipping_state,
+        city: values?.shipping_city,
+      },
+      payment: {
+        payment_mode: values?.payment_mode,
+        payment_status: 'pending',
+        payment_total: '',
+        transaction_id: '',
+      },
+    };
+    if (Array.isArray(cartProducts) && cartProducts.length > 0) {
+      formData.payment.payment_total = getCartTotal(cartProducts);
+      formData.orders = cartProducts;
+      dispatch(updateCheckout(formData));
+      navigate('/payment');
+    } else {
+      setUserErroMessage(
+        'There are no products in the card, please add some to proccess the checkout.'
+      );
+    }
+  };
+  //Custom hook call
+  const { handleChange, values, errors, handleSubmit } =
+    useForm(formSubmitHandler);
 
   // All countries list data
   useEffect(() => {
@@ -86,7 +131,331 @@ function BillingDetails() {
   return (
     <div className="billing-details-section">
       <h4 className="mb-3">{constants.BILLING_DETAILS_HEADING_LABEL}</h4>
-      <Formik
+      <Form onSubmit={handleSubmit}>
+        <Row>
+          <Col md={6} className="mb-3">
+            <Form.Group>
+              <Form.Label>
+                {constants.FIRST_NAME_LABEL} <span className="req">*</span>
+              </Form.Label>
+              <Form.Control
+                type="text"
+                className="form-control"
+                name="billing_first_name"
+                placeholder=""
+                onChange={handleChange}
+                required
+              />
+              {errors?.billing_first_name ? (
+                <div className="text-danger">{errors?.billing_first_name}</div>
+              ) : null}
+            </Form.Group>
+          </Col>
+          <Col md={6} className="mb-3">
+            <Form.Group>
+              <Form.Label>
+                {constants.LAST_NAME_LABEL} <span className="req">*</span>
+              </Form.Label>
+              <Form.Control
+                type="text"
+                className="form-control"
+                name="billing_last_name"
+                placeholder=""
+                onChange={handleChange}
+                required
+              />
+              {errors?.billing_last_name ? (
+                <div className="text-danger">{errors?.billing_last_name}</div>
+              ) : null}
+            </Form.Group>
+          </Col>
+        </Row>
+
+        <div className="mb-3">
+          <Form.Group>
+            <Form.Label>
+              {constants.EMAIL_LABEL} <span className="req">*</span>
+            </Form.Label>
+            <Form.Control
+              type="email"
+              placeholder="Enter email"
+              name="billing_user_email"
+              onChange={handleChange}
+              required
+            />
+            <Form.Text className="text-muted">
+              {constants.EMAIL_INFO_CONTENT}
+            </Form.Text>
+            {errors?.billing_user_email ? (
+              <div className="text-danger">{errors?.billing_user_email}</div>
+            ) : null}
+          </Form.Group>
+        </div>
+
+        <div className="mb-3">
+          <Form.Group>
+            <Form.Label>
+              {constants.ADDRESS_LABEL} <span className="req">*</span>
+            </Form.Label>
+            <Form.Control
+              type="text"
+              className="form-control"
+              name="billing_address_1"
+              placeholder=""
+              onChange={handleChange}
+              required
+            />
+            {errors?.billing_address_1 ? (
+              <div className="text-danger">{errors?.billing_address_1}</div>
+            ) : null}
+          </Form.Group>
+        </div>
+
+        <div className="mb-3">
+          <Form.Group>
+            <Form.Label>{constants.ADDRESS_2_LABEL} </Form.Label>
+            <Form.Control
+              type="text"
+              className="form-control"
+              name="billing_address_2"
+              placeholder=""
+              onChange={handleChange}
+            />
+          </Form.Group>
+        </div>
+
+        <Row>
+          <Col md={5} className="mb-3">
+            <Form.Group>
+              <Form.Label>
+                {constants.COUNTRY_LABEL} <span className="req">*</span>
+              </Form.Label>
+              <Form.Select
+                name="billing_country"
+                onChange={(e) => {
+                  setBillingCountry(e.target.value);
+                  handleChange(e);
+                }}
+                required
+              >
+                <option value="">Choose...</option>
+                {Array.isArray(countries) &&
+                  countries.map((countyData, index) => {
+                    return (
+                      <option key={index} value={countyData.isoCode}>
+                        {countyData.name}
+                      </option>
+                    );
+                  })}
+              </Form.Select>
+              {errors?.billing_country ? (
+                <div className="text-danger">{errors?.billing_country}</div>
+              ) : null}
+            </Form.Group>
+          </Col>
+          <Col md={4} className="mb-3">
+            <Form.Group>
+              <Form.Label>
+                {constants.STATE_LABEL} <span className="req">*</span>
+              </Form.Label>
+              <Form.Select
+                name="billing_state"
+                onChange={handleChange}
+                required
+              >
+                <option value="">Choose...</option>
+                {Array.isArray(billingAllStates) &&
+                  billingAllStates.map((countyData, index) => {
+                    return (
+                      <option key={index} value={countyData.isoCode}>
+                        {countyData.name}
+                      </option>
+                    );
+                  })}
+              </Form.Select>
+              {errors?.billing_state ? (
+                <div className="text-danger">{errors?.billing_state}</div>
+              ) : null}
+            </Form.Group>
+          </Col>
+          <Col md={3} className="mb-3">
+            <Form.Group>
+              <Form.Label>
+                {constants.CITY_LABEL} <span className="req">*</span>
+              </Form.Label>
+              <Form.Control
+                type="text"
+                className="form-control"
+                name="billing_city"
+                placeholder=""
+                onChange={handleChange}
+                required
+              />
+              {errors?.billing_city ? (
+                <div className="text-danger">{errors?.billing_city}</div>
+              ) : null}
+            </Form.Group>
+          </Col>
+        </Row>
+
+        <hr className="mb-4" />
+
+        <h4 className="mb-3">{constants.SHIPPING_HEADING_LABEL}</h4>
+
+        <div className="mb-3">
+          <Form.Group>
+            <Form.Label>
+              {constants.ADDRESS_LABEL} <span className="req">*</span>
+            </Form.Label>
+            <Form.Control
+              type="text"
+              className="form-control"
+              name="shipping_address_1"
+              placeholder=""
+              value={values?.shipping?.address_1}
+              onChange={handleChange}
+              required
+            />
+            {errors?.shipping_address_1 ? (
+              <div className="text-danger">{errors?.shipping_address_1}</div>
+            ) : null}
+          </Form.Group>
+        </div>
+
+        <div className="mb-3">
+          <Form.Group>
+            <Form.Label>{constants.ADDRESS_2_LABEL} </Form.Label>
+            <Form.Control
+              type="text"
+              className="form-control"
+              name="shipping_address_2"
+              placeholder=""
+              value={values?.shipping?.address_2}
+              onChange={handleChange}
+            />
+          </Form.Group>
+        </div>
+
+        <Row>
+          <Col md={5} className="mb-3">
+            <Form.Group>
+              <Form.Label>
+                {constants.COUNTRY_LABEL} <span className="req">*</span>
+              </Form.Label>
+              <Form.Select
+                name="shipping_country"
+                onChange={(e) => {
+                  setShippingCountry(e.target.value);
+                  handleChange(e);
+                }}
+                required
+              >
+                <option value="">Choose...</option>
+                {Array.isArray(countries) &&
+                  countries.map((countyData, index) => {
+                    return (
+                      <option key={index} value={countyData.isoCode}>
+                        {countyData.name}
+                      </option>
+                    );
+                  })}
+              </Form.Select>
+              {errors?.shipping_country ? (
+                <div className="text-danger">{errors?.shipping_country}</div>
+              ) : null}
+            </Form.Group>
+          </Col>
+          <Col md={4} className="mb-3">
+            <Form.Group className="mb-3">
+              <Form.Label>
+                {constants.STATE_LABEL} <span className="req">*</span>
+              </Form.Label>
+              <Form.Select
+                name="shipping_state"
+                onChange={handleChange}
+                required
+              >
+                <option value="">Choose...</option>
+                {Array.isArray(shippingAllStates) &&
+                  shippingAllStates.map((countyData, index) => {
+                    return (
+                      <option key={index} value={countyData.isoCode}>
+                        {countyData.name}
+                      </option>
+                    );
+                  })}
+              </Form.Select>
+              {errors?.shipping_state ? (
+                <div className="text-danger">{errors?.shipping_state}</div>
+              ) : null}
+            </Form.Group>
+          </Col>
+          <Col md={3} className="mb-3">
+            <Form.Group className="mb-3">
+              <Form.Label>
+                {constants.CITY_LABEL} <span className="req">*</span>
+              </Form.Label>
+              <Form.Control
+                type="text"
+                className="form-control"
+                name="shipping_city"
+                placeholder=""
+                onChange={handleChange}
+                required
+              />
+              {errors?.shipping_city ? (
+                <div className="text-danger">{errors?.shipping_city}</div>
+              ) : null}
+            </Form.Group>
+          </Col>
+        </Row>
+
+        <hr className="mb-4" />
+
+        <h4 className="mb-3">{constants.PAYMENT_HEADING_LABEL}</h4>
+
+        <div className="d-block my-3">
+          {paymentTypes.map((type) => {
+            return (
+              <div className="custom-control custom-radio" key={type.value}>
+                <input
+                  id={type.value}
+                  name="payment_mode"
+                  type="radio"
+                  className="custom-control-input"
+                  value={type.value}
+                  onChange={handleChange}
+                  checked={values?.payment_mode === type.value ? true : false}
+                  required
+                />
+                <label className="custom-control-label" htmlFor={type.value}>
+                  {type.label}
+                </label>
+              </div>
+            );
+          })}
+        </div>
+
+        {userErroMessage && (
+          <div className="mb-3">
+            <Alert
+              variant="danger"
+              onClose={() => setUserErroMessage('')}
+              dismissible
+            >
+              {userErroMessage}
+            </Alert>
+          </div>
+        )}
+
+        <button
+          className="btn btn-primary btn-lg btn-block w-100"
+          type="submit"
+        >
+          {constants.CHECKOUT_BUTTON_LABEL}
+        </button>
+      </Form>
+      {/* <Formik
         initialValues={{
           shippingAsBilling: false,
           billing: {
@@ -118,7 +487,7 @@ function BillingDetails() {
           setSubmitting(true);
           if (Array.isArray(cartProducts) && cartProducts.length > 0) {
             values.payment.payment_total = getCartTotal(cartProducts);
-            values.orders = cartProducts; 
+            values.orders = cartProducts;
             dispatch(updateCheckout(values));
             navigate('/payment');
           } else {
@@ -500,7 +869,10 @@ function BillingDetails() {
                       }
                       onChange={handleChange}
                     />
-                    <label className="custom-control-label" htmlFor={type.value}>
+                    <label
+                      className="custom-control-label"
+                      htmlFor={type.value}
+                    >
                       {type.label}
                     </label>
                   </div>
@@ -529,7 +901,7 @@ function BillingDetails() {
             </button>
           </Form>
         )}
-      </Formik>
+      </Formik> */}
     </div>
   );
 }

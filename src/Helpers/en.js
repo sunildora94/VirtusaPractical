@@ -43,6 +43,7 @@ const constants = {
   PRODUCT_NAME_TITLE: 'Product Name',
   PRODUCT_DESCRIPTION_TITLE: 'Brief Description',
   PRODUCT_PRICE_TITLE: 'Price',
+  PRODUCT_QUANTITY_TITLE: 'Quantity',
   RELOAD_PRODUCTS_BUTTON_TITLE: 'reload default data',
   COMPLETE_PAYMENT_HEADING_TITLE: 'Review Summary and Complete Payment',
   COMPLETE_PAYMENT_ENTER_CODE_LABEL: 'Enter code',
@@ -67,5 +68,7 @@ const constants = {
   PAYMENT_DETAILS_ISSUER_LABEL: 'Payment Issuer',
   PRODUCT_SUMMARY_LABEL: 'Product summary',
   CONFIRM_PAYMENT_LABEL: 'Complete payment',
+  ADD_TO_CART_BUTTON_LABEL: 'Add to cart',
+  QUANTITY_LABEL: 'Qunatity',
 };
 export default constants;

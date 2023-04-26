@@ -10,6 +10,7 @@ import { store } from './Store/Store';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Payments } from './Components/Pages/Checkout';
+import { ProductsList } from './Components/Pages/Products';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -18,7 +19,8 @@ root.render(
       <Provider store={store}>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<App />} />
+            <Route path="/" element={<ProductsList />} />
+            <Route path="/checkout" element={<App />} />
             <Route path="/payment" element={<Payments />} />
             <Route path="/thankyou" element={<Thankyou />} />
           </Routes>
@@ -30,6 +32,7 @@ root.render(
 
 // Bootstrap checkout page link
 // https://getbootstrap.com/docs/4.0/examples/checkout/
+// https://dev.to/codebucks/form-validation-in-reactjs-by-building-reusable-custom-hook-1bg7
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

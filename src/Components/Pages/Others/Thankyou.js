@@ -100,6 +100,8 @@ const Thankyou = () => {
                           </div>
                           <span className="text-muted">
                             ${prodcusts?.price}
+                            <br />
+                            <small>{constants.QUANTITY_LABEL}: {prodcusts?.quantity}</small>
                           </span>
                         </li>
                       );

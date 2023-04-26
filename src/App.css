@@ -91,3 +91,12 @@
   fill: #ff0000;
   cursor: pointer;
 }
+
+.header-cart-icon{
+  fill: #fff;
+  cursor: pointer;
+}
+
+.req {
+    color: red;
+}

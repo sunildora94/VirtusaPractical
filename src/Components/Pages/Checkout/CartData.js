@@ -11,7 +11,7 @@ function CartData() {
       <h4 className="d-flex justify-content-between align-items-center mb-3">
         <span className="text-muted">
           {constants.CART_BOX_TITLE}
-          <ManageCart/>
+          <ManageCart />
         </span>
         <span className="badge bg-secondary">
           {Array.isArray(cartProducts) ? cartProducts.length : 0}
@@ -31,7 +31,11 @@ function CartData() {
                       {prodcusts?.brief_desc}
                     </small>
                   </div>
-                  <span className="text-muted">${prodcusts?.price}</span>
+                  <span className="text-muted">
+                    ${prodcusts?.price}
+                    <br />
+                    <small>{constants.QUANTITY_LABEL}: {prodcusts?.quantity}</small>
+                  </span>
                 </li>
               );
             })
